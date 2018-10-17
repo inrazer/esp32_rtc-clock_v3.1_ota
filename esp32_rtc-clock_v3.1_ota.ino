@@ -12,10 +12,13 @@
 #define POST      // uncomment if you wish a POST at first power-up
 
 #include <WiFi.h>
+#include <WiFiMulti.h>
 #include <ESPmDNS.h>
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
 #include <Time.h>
+
+WiFiMulti wifiMulti;
 
 int hou_t = 0;
 int hou_o = 0;
@@ -62,18 +65,21 @@ void ErsteStart()
   Serial.println("Start nach dem Reset");
   #endif
   WiFi.mode(WIFI_STA);
-  WiFi.begin("network-name", "network-password");
+  //WiFi.begin("network-name", "network-password");
+    wifiMulti.addAP("ssid_from_AP_1", "your_password_for_AP_1");
+    wifiMulti.addAP("ssid_from_AP_2", "your_password_for_AP_2");
+    wifiMulti.addAP("ssid_from_AP_3", "your_password_for_AP_3");
   #ifdef DEBUG
   Serial.println("");
   #endif
  
-  while (WiFi.status() != WL_CONNECTED)
+  while (wifiMulti.run() != WL_CONNECTED)
   {
     delay(200);
     pinMode(2, OUTPUT);
     digitalWrite(2, HIGH);   // Turn the LED on
     delay(200);
-    digitalWrite(2, LOW);   // Turn the LED off
+    digitalWrite(2, LOW);    // Turn the LED off
     #ifdef DEBUG
     Serial.print(".");
     #endif
